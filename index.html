@@ -1,0 +1,426 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Carbs calculator">
+    <meta name="author" content="Artur">
+
+    <title>Calculator</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="theme/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="theme/vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="theme/dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="theme/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div style="padding: 10px;">
+
+        <div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Meal</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+			<div class="row">
+			    <div class="col-lg-12">
+			        <div class="panel panel-default">
+			            <div class="panel-heading">
+			                Produkty
+			            </div>
+			            <!-- /.panel-heading -->
+			            <div class="panel-body">
+			                <table width="100%" class="table table-striped table-bordered table-hover" id="products">
+			                    <thead>
+			                        <tr>
+			                            <th>Name</th>
+			                            <th>Carbs</th>
+			                            <th>Protein</th>
+			                        </tr>
+			                    </thead>
+			                    <tbody class="products">
+			                        
+			                    </tbody>
+			                </table>
+			                <!-- /.table-responsive -->
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <form id="product-details-form">
+                                        <div class="form-group name">
+                                            <label>Nazwa</label>
+                                            <input class="form-control">
+                                        </div>
+                                        <div class="form-group carbs">
+                                            <label>Węglowodany (bez błonnika)</label>
+                                            <input class="form-control">
+                                        </div>
+                                        <div class="form-group proteins">
+                                            <label>Proteiny</label>
+                                            <input class="form-control">
+                                        </div>
+                                        <div class="form-group weight">
+                                            <label>Ilość (waga)</label>
+                                            <input class="form-control">
+                                        </div>
+                                        <div class="form-group fat">
+                                            <label>Tłuszcze</label>
+                                            <input class="form-control">
+                                        </div>
+                                        <button id="add-btn" class="btn btn-default">Dodaj</button>
+                                        <button type="reset" class="btn btn-default">Reset</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- /.row (nested) -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div id="current-meal">
+								
+							</div>
+							<div id="current-meal-controls"></div>
+						</div>
+          	  		</div>
+					<div class="panel panel-default">
+						<div class="panel-body">
+							Archive:
+							<div id="archive-meals">
+								
+							</div>
+						</div>
+          	  		</div>
+          	  	<!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="theme/vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="theme/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="theme/vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- DataTables JavaScript -->
+    <script src="theme/vendor/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="theme/vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+    <script src="theme/vendor/datatables-responsive/dataTables.responsive.js"></script>
+	
+    <!-- Custom Theme JavaScript -->
+    <script src="theme/dist/js/sb-admin-2.js"></script>
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+		var products = [
+            {name: 'Awokado', carbs: 2.0, proteins: 2.0},
+            {name: 'Bakłażan', carbs: 3.0, proteins: 1.0},
+            {name: 'Brokuły', carbs: 4.4, proteins: 2.8},
+            {name: 'Brukselki', carbs: 5.2, proteins: 3.4},
+            {name: 'Cebula', carbs: 7.3, proteins: 1.1},
+            {name: 'Cukinia', carbs: 2.1, proteins: 1.2},
+            {name: 'Dynia', carbs: 6.5, proteins: 1.0},
+            {name: 'Kalafior', carbs: 3.0, proteins: 1.9},
+            {name: 'Kapusta', carbs: 3.5, proteins: 1.3},
+            {name: 'Karczochy', carbs: 6.0, proteins: 3.3},
+            {name: 'Koper Włoski', carbs: 3.9, proteins: 1.2},
+            {name: 'Marchew', carbs: 7.2, proteins: 0.9},
+            {name: 'Pasternak', carbs: 13.1, proteins: 1.2},
+            {name: 'Słodkie Ziemniaki', carbs: 17.0, proteins: 1.6},
+            {name: 'Szparagi', carbs: 1.8, proteins: 2.2},
+            {name: 'Ziemniaki', carbs: 14.8, proteins: 2.2},
+            {name: 'Ogórki', carbs: 2.4, proteins: 0.6},
+            {name: 'Pomidory ', carbs: 2.9, proteins: 0.9},
+            
+            {name: 'Ananasy', carbs: 11.6, proteins: 0.5},
+            {name: 'Banany', carbs: 20.4, proteins: 1.1},
+            {name: 'Gruszki', carbs: 11.9, proteins: 0.4},
+            {name: 'Jabłka', carbs: 11.6, proteins: 0.3},
+            {name: 'Kiwi', carbs: 12.0, proteins: 1.1},
+            {name: 'Mango', carbs: 13.4, proteins: 0.8},
+			{name: 'Truskawki', carbs: 6.0, proteins: 0.7},
+			
+			{name: 'Chapati', carbs: 45.0, proteins: 9, weight: 45},
+		];
+		var tbody = $("tbody.products");
+		for (var i in products) {
+			var product = products[i];
+			var tr = $(
+				"<tr>" +
+				" <td>" + product.name + "</td>" +
+				" <td>" + product.carbs + "</td>" +
+				" <td>" + product.proteins + "</td>" +
+				"</tr>"
+			);
+			tr.data('nutrition', product)
+			tr.appendTo(tbody);
+		}
+		function myRound(x) {
+			return Math.round(x * 100) / 100.0
+		}
+        $(document).ready(function() {
+			class Meal {
+				constructor(serializable) {
+					if (serializable && serializable.elements) {
+						this.elements_ = serializable.elements;
+					} else {
+						this.elements_ = [];
+					}
+				}
+				
+				serializable() {
+					return {
+						elements: this.elements_
+					};
+				}
+				
+				empty() {
+					return this.elements_.length == 0;
+				}
+				
+				clear() {
+					this.elements_ = [];
+				}
+				
+				add(data) {
+					this.elements_.push(data);
+				}
+				
+				delete(i) {
+					this.elements_.splice(i, 1);
+					refresh();
+				}
+				
+				draw(element, immutable) {
+					element.html('');
+					var table = $(
+						'<table class="meal">' +
+						' <tr>' +
+						'  <th></th>' +
+						'  <th>Węg.</th>' +
+						'  <th>Białko</th>' +
+						'  <th>Waga</th>' +
+						' </tr>' +
+					    '</table>');
+					var sumCarbs = 0;
+					var sumProteins = 0;
+					var sumWeight = 0;
+					for (var i in this.elements_) {
+						var el = this.elements_[i];
+						var tr = $(
+							"<tr>" +
+							" <td>" + el.name + "</td>" +
+							" <td>" + el.carbs + "</td>" +
+							" <td>" + el.proteins + "</td>" +
+							" <td>" + el.weight + "</td>" +
+							" <td><a href='#' class='delete'>x</a></td>" +
+							"</tr>"
+						);
+						var selfMeal = this;
+						if (immutable) {
+							tr.find(".delete").remove();
+						} else {
+							tr.find(".delete").click(function() {
+								selfMeal.delete(i);
+								return false;
+							});
+						}
+						sumCarbs += el.carbs;
+						sumProteins += el.proteins;
+						sumWeight += el.weight;
+						tr.appendTo(table);
+					}
+					var tr = $(
+						"<tr class='summary'>" +
+						" <td>" + "+" + "</td>" +
+						" <td>" + myRound(sumCarbs) + "</td>" +
+						" <td>" + myRound(sumProteins)+ "</td>" +
+						" <td>" + myRound(sumWeight) + "</td>" +
+						" <td>" + "" + "</td>" +
+						"</tr>"
+					);
+					var tr2 = $(
+						"<tr class='summary2'>" +
+						" <td>" + "~" + "</td>" +
+						" <td><b>" + myRound(sumCarbs + sumProteins / 3) + "</b></td>" +
+						"</tr>"
+					);
+					if (sumProteins + sumCarbs != 0) {
+						tr.appendTo(table);
+						tr2.appendTo(table);
+						table.appendTo(element);
+					}
+				}
+			}
+			class Repository {
+				constructor() {
+					this.current_ = new Meal();
+					this.past_ = [];
+				}
+				
+				current() {
+					return this.current_;
+				}
+				
+				archiveCurrent() {
+					this.past_.push(this.current_);
+					this.current_ = new Meal();
+				}
+				
+				save() {
+					localStorage.setItem(
+						"meal.current",
+						JSON.stringify(this.current().serializable()));
+					var past_to_serialize = [];
+					for (var i in this.past_) {
+						if (i > 100) {
+							break;
+						}
+						past_to_serialize.push(this.past_[i].serializable());
+					}
+
+					localStorage.setItem(
+						"meal.past",
+						JSON.stringify(past_to_serialize));
+				}
+				
+				load() {
+					var data = localStorage.getItem("meal.current");
+					if (data) {
+						console.log("Found current meal");
+						this.current_ = new Meal(JSON.parse(data));
+					}
+					var pastData = localStorage.getItem("meal.past");
+					if (pastData) {
+						var pastMeals = JSON.parse(pastData);
+						console.log("Found " + pastMeals.length + " past meals");
+						for (var i in pastMeals) {
+							var meal = new Meal(pastMeals[i]);
+							if (meal.empty()) {
+								continue;
+							}
+							this.past_.push(meal);
+						}
+					}
+				}
+				
+				draw() {
+					$('#archive-meals').html('');
+					for (var i in this.past_) {
+						var m = this.past_[i];
+						var div = $("<div>").appendTo($('#archive-meals'));
+						m.draw(div, true);
+					}
+			
+					$('#current-meal').html('');
+					$('#current-meal-controls').html('');
+					if (this.current().empty()) {
+						$('#current-meal').html('Add products');
+					} else {
+						this.current().draw($('#current-meal'));
+						$('<button>To Archive</button>')
+							.click(function() {
+								repository.archiveCurrent();
+								refresh();
+							})
+							.appendTo('#current-meal-controls');
+							
+						$('<button>Delete</button>')
+							.click(function() {
+								repository.current().clear();
+								refresh();
+							})
+							.appendTo('#current-meal-controls');
+					}
+				}
+			}
+			var repository = new Repository();
+			repository.load();
+			
+			function refresh() {
+				repository.draw();
+				repository.save();
+			}
+			refresh();
+			
+            $('#products').DataTable({
+                responsive: true
+            });
+			
+			$('#products').on('click', 'tr', function () {
+				var data = $(this).data('nutrition');
+			    var form = $('#product-details-form .name input').val(data['name']);
+			    var form = $('#product-details-form .carbs input').val(data['carbs']);
+			    var form = $('#product-details-form .proteins input').val(data['proteins']);
+			    var form = $('#product-details-form .fat input').val(data['fat'] || 0.0);
+			    var form = $('#product-details-form .weight input').val(data['weight'] || 100.0);
+			});
+			function parseNum(str) {
+				return parseFloat(str);
+			}
+			$('#add-btn').click(function() {
+				try {
+					var mult = parseNum($('#product-details-form .weight input').val()) / 100.0;
+					var data = {
+						name: $('#product-details-form .name input').val(),
+						carbs: myRound(parseNum($('#product-details-form .carbs input').val()) * mult),
+						proteins: myRound(parseNum($('#product-details-form .proteins input').val()) * mult),
+						fat: myRound(parseNum($('#product-details-form .fat input').val()) * mult),
+						weight: myRound(parseNum($('#product-details-form .weight input').val()))
+					}
+					repository.current().add(data);
+					refresh();
+				} catch (e) {
+					console.log(e);
+				}
+				return false;
+			});
+			
+        });
+    </script>
+	<style>
+		table.meal td {
+			min-width: 100px;
+		}
+		table.meal tr.summary {
+			border-top: 1px solid black;
+		}
+		
+		#archive-meals .meal {
+			margin: 20px 10px;
+		}
+	</style>
+</body>
+
+</html>
