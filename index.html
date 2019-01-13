@@ -73,22 +73,24 @@
                                             <label>Nazwa</label>
                                             <input class="form-control">
                                         </div>
-                                        <div class="form-group carbs">
-                                            <label>Węglowodany (bez błonnika)</label>
-                                            <input class="form-control">
-                                        </div>
-                                        <div class="form-group proteins">
-                                            <label>Proteiny</label>
-                                            <input class="form-control">
-                                        </div>
                                         <div class="form-group weight">
                                             <label>Ilość (waga)</label>
                                             <input class="form-control">
                                         </div>
-                                        <div class="form-group fat">
-                                            <label>Tłuszcze</label>
-                                            <input class="form-control">
-                                        </div>
+										<div class="edit-details">
+                                        	<div class="form-group carbs">
+                                            	<label>Węglowodany (bez błonnika)</label>
+                                           		<input class="form-control">
+                                        	</div>
+                                        	<div class="form-group proteins">
+                                            	<label>Proteiny</label>
+                                            	<input class="form-control">
+                                        	</div>
+                                        	<div class="form-group fat">
+                                            	<label>Tłuszcze</label>
+                                            	<input class="form-control">
+                                      		</div>
+										</div>
                                         <button id="add-btn" class="btn btn-default">Add</button>
                                         <button type="reset" class="btn btn-default">Reset</button>
                                     </form>
@@ -375,16 +377,20 @@
 			refresh();
 			
             $('#products').DataTable({
-                responsive: true
+                responsive: true,
+				lengthChange: false,
             });
 			
 			$('#products').on('click', 'tr', function () {
 				var data = $(this).data('nutrition');
-			    var form = $('#product-details-form .name input').val(data['name']);
-			    var form = $('#product-details-form .carbs input').val(data['carbs']);
-			    var form = $('#product-details-form .proteins input').val(data['proteins']);
-			    var form = $('#product-details-form .fat input').val(data['fat'] || 0.0);
-			    var form = $('#product-details-form .weight input').val(data['weight'] || 100.0);
+			    $('#product-details-form .name input').val(data['name']);
+			    $('#product-details-form .carbs input').val(data['carbs']);
+			    $('#product-details-form .proteins input').val(data['proteins']);
+			    $('#product-details-form .fat input').val(data['fat'] || 0.0);
+			    $('#product-details-form .weight input').val(data['weight'] || 100.0);
+				$([document.documentElement, document.body]).animate({
+				        scrollTop: $("#product-details-form").offset().top
+				}, 300);
 			});
 			function parseNum(str) {
 				return parseFloat(str);
@@ -412,6 +418,7 @@
 	<style>
 		table.meal td {
 			min-width: 70px;
+			padding: 4px;
 		}
 		table.meal tr.summary {
 			border-top: 1px solid black;
@@ -419,6 +426,10 @@
 		
 		#archive-meals .meal {
 			margin: 20px 10px;
+		}
+		
+		.edit-details {
+			display: none;
 		}
 	</style>
 </body>
